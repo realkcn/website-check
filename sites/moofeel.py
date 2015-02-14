@@ -23,10 +23,7 @@ def login(driver,username,password):
     while count < 3:
         count += 1
         time.sleep(3)
-        try:
-            submitbox = driver.find_element_by_css_selector("#lsform button[type=\"submit\"]")
-        except NoSuchElementException:
-            break
+        submitbox = driver.find_element_by_css_selector("#lsform button[type=\"submit\"]")
         submitbox.click()
         try:
             nick = driver.find_element_by_css_selector("#um a[title=\"访问我的空间\"]")
@@ -83,5 +80,3 @@ def checkit(driver):
     do_reply(driver)
     time.sleep(2)
     click_get(driver)
-    driver.close()
-    driver.quit()

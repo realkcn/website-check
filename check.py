@@ -27,6 +27,10 @@ def checkit(sitename):
             print(content)
             if errorinfo:
                 print("Exception: %s" % errorinfo)
+            else:
+                print("成功")
+            driver.close()
+            driver.quit()
     # driver = None
 
 with Pool(processes=4) as pool:
