@@ -3,7 +3,6 @@ import sys, os
 from selenium import webdriver
 import sites
 from sites import *
-import subprocess
 import io,time
 from contextlib import redirect_stdout
 from multiprocessing import Pool
@@ -14,16 +13,20 @@ def checkit(sitename):
     with io.StringIO() as buf, redirect_stdout(buf):
         errorinfo = None
         try:
-            driver = webdriver.Firefox()
+            if sitename != "test":
+                driver = webdriver.Firefox()
+            else:
+                driver = None
             eval(sitename + ".checkit(driver)")
         except Exception as e:
             errorinfo = e
         finally:
             sys.stdout = sys.__stdout__
             print("%s output:" % sitename)
-            print(buf.getvalue())
+            content = buf.getvalue()
+            print(content)
             if errorinfo:
-                print("Exception: %s" % e)
+                print("Exception: %s" % errorinfo)
     # driver = None
 
 with Pool(processes=4) as pool:
