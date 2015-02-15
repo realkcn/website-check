@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys, os
+import sys, traceback
 from selenium import webdriver
 import sites
 from sites import *
@@ -19,7 +19,8 @@ def checkit(sitename):
                 driver = None
             eval(sitename + ".checkit(driver)")
         except Exception as e:
-            errorinfo = e
+            errorinfo = traceback.format_exc()
+
         finally:
             sys.stdout = sys.__stdout__
             print("%s output:" % sitename)
@@ -33,8 +34,11 @@ def checkit(sitename):
             driver.quit()
     # driver = None
 
-with Pool(processes=4) as pool:
-    pool.map(checkit, sites.__all__)
+if len(sys.argv)>1:
+    checkit(sys.argv[1])
+else:
+    with Pool(processes=4) as pool:
+        pool.map(checkit, sites.__all__)
 
 # for site in sites.__all__:
     # child = os.fork()

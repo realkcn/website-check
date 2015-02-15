@@ -13,6 +13,15 @@ def start(driver):
     assert "磨坊" in driver.title
 
 
+def isLogined(driver, username):
+    try:
+        nick = driver.find_element_by_css_selector("#um a[title=\"访问我的空间\"]")
+        if nick and (nick.text == username):
+            return True
+        return False
+    except NoSuchElementException:
+        return False
+
 def login(driver,username,password):
     count = 0
     elem = driver.find_element_by_id("ls_username")
@@ -20,21 +29,19 @@ def login(driver,username,password):
     elem = driver.find_element_by_id("ls_password")
     elem.send_keys(password)
     # 点击登录，尝试3次
-    while count < 3:
+    while True:
         count += 1
         time.sleep(3)
-        submitbox = driver.find_element_by_css_selector("#lsform button[type=\"submit\"]")
-        submitbox.click()
         try:
-            nick = driver.find_element_by_css_selector("#um a[title=\"访问我的空间\"]")
-            if (nick != None) and (nick.text == username):
-                break
+            submitbox = driver.find_element_by_css_selector("#lsform button[type=\"submit\"]")
+            submitbox.click()
         except NoSuchElementException:
-            continue
-    if count >= 3:
-        driver.save_screenshot("/tmp/mofangloginerror.jpg")
-        print("login error")
-        raise Exception
+            if isLogined(driver, username):
+                break
+            if count >= 3:
+                driver.save_screenshot("/tmp/mofangloginerror.jpg")
+                print("login error")
+                raise Exception
 
 
 def goto_check(driver):
