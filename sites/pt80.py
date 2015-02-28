@@ -1,5 +1,5 @@
 # -*- coding: gbk -*-
-import time
+import time, random
 import configparser
 
 from selenium import webdriver
@@ -42,6 +42,27 @@ def login(driver, username, password):
 
 def dailydoit(driver):
     driver.get("http://www.pt80.net/plugin.php?id=dsu_paulsign:sign")
+    emotes = ["kx", "ng", "ym", "wl", "nu", "shuai"]
+    count = 0
+#随机选一个表情点
+    while True:
+        count += 1
+        time.sleep(3)
+        try:
+            emote = random.choice(emotes)
+            submitbox = driver.find_element_by_id(emote)
+            submitbox.click()
+            break
+        except NoSuchElementException:
+            if count >= 3:
+                driver.save_screenshot("/tmp/mofangloginerror.jpg")
+                print("login error")
+                raise Exception
+            emotes.remove(emote)
+    say = driver.find_element_by_css_selector("#qiandao input[name=\"qdmode\"][value=\"3\"]")
+    say.click()
+    submitbox = driver.find_element_by_css_selector("#qiandao img[src*=\"qdtb\"]")
+    submitbox.click()
 
 def checkit(driver):
     config = configparser.ConfigParser()
