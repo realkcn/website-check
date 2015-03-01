@@ -65,7 +65,7 @@ def do_reply(driver):
 def click_get(driver):
     credit = driver.find_element_by_id("hcredit_3")
     oldcredit = credit.text
-    img = driver.find_element_by_css_selector("img[alt=\"回复帖子签到后，点这领取 3 磨币\"]")
+    img = driver.find_element_by_css_selector("img[alt^=\"回复帖子签到后，点这领取\"]")
     img.click()
     time.sleep(10)
     credit = driver.find_element_by_id("hcredit_3")
