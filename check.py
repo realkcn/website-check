@@ -1,11 +1,17 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import sys, traceback
-from selenium import webdriver
-import sites
-from sites import *
-import io,time
+import sys
+import traceback
+import logging
+import io
+import argparse
 from contextlib import redirect_stdout
 from multiprocessing import Pool
+
+from selenium import webdriver
+
+import sites
+
 
 __author__ = 'kcn'
 
@@ -34,11 +40,38 @@ def checkit(sitename):
             driver.quit()
     # driver = None
 
-if len(sys.argv)>1:
-    checkit(sys.argv[1])
+# 使用一个名字为checkin的logger
+logger = logging.getLogger('使用一个名字为checkin的logger')
+# 设置logger的level为DEBUG
+logger.setLevel(logging.DEBUG)
+# 创建一个输出日志到控制台的StreamHandler
+hdr = logging.StreamHandler()
+formatter = logging.Formatter('[%(asctime)s] %(name)s:%(levelname)s: %(message)s')
+hdr.setFormatter(formatter)
+# 给logger添加上handler
+logger.addHandler(hdr)
+
+parser = argparse.ArgumentParser(description='checkin')
+parser.add_argument('-v', '--verbose', action='store_true', dest='verbose', default=False,
+                    help='Enable debug info')
+parser.add_argument('-m', '--module', nargs='+', dest='modules',
+                    help='Special module should be run')
+
+args = parser.parse_args()
+
+if args.verbose:
+    logger.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.ERROR)
+
+if args.modules is not None and len(args.modules) > 1:
+    for module in args.modules:
+        print(module)
+#        checkit(module)
 else:
     with Pool(processes=4) as pool:
-        pool.map(checkit, sites.__all__)
+        print("all")
+#        pool.map(checkit, sites.__all__)
 
 # for site in sites.__all__:
     # child = os.fork()
