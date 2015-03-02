@@ -52,17 +52,20 @@ def dailydoit(driver):
             emote = random.choice(emotes)
             submitbox = driver.find_element_by_id(emote)
             submitbox.click()
+            say = driver.find_element_by_css_selector("#qiandao input[name=\"qdmode\"][value=\"3\"]")
+            say.click()
+            submitbox = driver.find_element_by_css_selector("#qiandao img[src*=\"qdtb\"]")
+            submitbox.click()
             break
         except NoSuchElementException:
             if count >= 3:
-                driver.save_screenshot("/tmp/mofangloginerror.jpg")
-                print("login error")
-                raise Exception
-            emotes.remove(emote)
-    say = driver.find_element_by_css_selector("#qiandao input[name=\"qdmode\"][value=\"3\"]")
-    say.click()
-    submitbox = driver.find_element_by_css_selector("#qiandao img[src*=\"qdtb\"]")
-    submitbox.click()
+                break
+                # driver.save_screenshot("/tmp/mofangloginerror.jpg")
+                # print("login error")
+                # raise Exception
+            emotes = "kx"
+    extcreditmenu = driver.find_element_by_id("extcreditmenu")
+    print(extcreditmenu.text)
 
 def checkit(driver):
     config = configparser.ConfigParser()
